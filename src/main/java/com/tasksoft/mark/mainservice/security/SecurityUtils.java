@@ -11,10 +11,10 @@ public class SecurityUtils {
     }
 
     public String getCurrentUserId() {
-        return getPrincipal().getSubject();
+        return getPrincipal().getClaimAsString("userId");
     }
 
     public String getCurrentUserName() {
-        return getPrincipal().getClaimAsString("preferred_username");
+        return getPrincipal().getClaimAsString("username");
     }
 }
