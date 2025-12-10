@@ -22,5 +22,3 @@ public record HomeDashboardDTO(
             LocalDateTime dueDate
     ) {}
 }
-
-//TODO: modify the task schema to include the create and due times

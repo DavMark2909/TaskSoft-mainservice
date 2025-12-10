@@ -1,4 +1,7 @@
 package com.tasksoft.mark.mainservice.dto;
 
-public class GroupDto {
+public record GroupDto(
+        Long groupId,
+        String name
+) {
 }

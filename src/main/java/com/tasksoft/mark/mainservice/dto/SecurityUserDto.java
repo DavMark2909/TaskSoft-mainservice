@@ -1,4 +1,8 @@
 package com.tasksoft.mark.mainservice.dto;
 
-public class SecurityUserDto {
+public record SecurityUserDto(
+        String username,
+        Long id,
+        String role
+) {
 }
