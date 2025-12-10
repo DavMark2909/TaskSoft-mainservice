@@ -1,6 +1,7 @@
 package com.tasksoft.mark.mainservice.controllers;
 
 import com.tasksoft.mark.mainservice.dto.HomeDashboardDTO;
+import com.tasksoft.mark.mainservice.dto.SecurityUserDto;
 import com.tasksoft.mark.mainservice.security.SecurityUtils;
 import com.tasksoft.mark.mainservice.service.HomeService;
 import org.springframework.http.ResponseEntity;
@@ -24,5 +25,15 @@ public class HomeController {
         HomeDashboardDTO dashboardData = homeService.getUserDashboard(userId);
 
         return ResponseEntity.ok(dashboardData);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<SecurityUserDto> user(){
+        String userName = securityUtils.getCurrentUserName();
+        Long userId = securityUtils.getCurrentUserId();
+        String role = securityUtils.getCurrentUserRole();
+        SecurityUserDto dto = new SecurityUserDto(userName, userId, role);
+
+        return ResponseEntity.ok(dto);
     }
 }

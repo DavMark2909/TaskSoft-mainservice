@@ -20,7 +20,7 @@ public class GroupController {
 
     @GetMapping("/")
     public ResponseEntity<List<GroupContentDTO>> getAllGroups() {
-//  TODO: gateway should check authentication and then modify the request to this endpoint to include user's id as a header
+//  TODO: implement JWT Authentication extraction here to get the user id
         List<GroupContentDTO> list = groupService.getUserGroups(null).stream().map(this::mapGroupToDTO).toList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -41,6 +41,11 @@ public class GroupController {
     public ResponseEntity<Long> removeUser(@RequestBody UserToGroupDTO userToGroupDTO) {
         groupService.removeUserFromGroup(userToGroupDTO.groupId(), userToGroupDTO.userId());
         return new ResponseEntity<>(userToGroupDTO.groupId(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<GroupDto>> getGroups() {
+        return ResponseEntity.ok(groupService.getAllGroups());
     }
 
     private GroupContentDTO mapGroupToDTO(Group group) {
