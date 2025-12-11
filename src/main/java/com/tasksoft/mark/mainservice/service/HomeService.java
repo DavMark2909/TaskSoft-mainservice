@@ -33,12 +33,12 @@ public class HomeService {
             return getDashboardForUserOnly(userId, userById.getFirstName());
         }
 
-        long pendingCount = taskRepository.countMyTasksByType(userId, userGroupIds, TaskType.IN_PROGRESS);
+        long pendingCount = taskRepository.countMyTasksByType(userId, userGroupIds, TaskType.CREATED);
         long delayedCount = taskRepository.countMyTasksByType(userId, userGroupIds, TaskType.DELAYED);
         long completedCount = taskRepository.countMyTasksByType(userId, userGroupIds, TaskType.COMPLETED);
 
-        List<Task> personalTask = taskRepository.findByAssigneeUserIdAndTaskType(userId, TaskType.IN_PROGRESS);
-        List<Task> groupTask = taskRepository.findByAssigneeGroupIdInAndTaskTypeOrderByAssigneeGroupNameAsc(userGroupIds, TaskType.IN_PROGRESS);
+        List<Task> personalTask = taskRepository.findByAssigneeUserIdAndTaskType(userId, TaskType.CREATED);
+        List<Task> groupTask = taskRepository.findByAssigneeGroupIdInAndTaskTypeOrderByAssigneeGroupNameAsc(userGroupIds, TaskType.CREATED);
 
         List<HomeDashboardDTO.TaskSummary> personalList = personalTask.stream().map(task -> convertToTaskSummary(task, true)).toList();
         List<HomeDashboardDTO.TaskSummary> groupList = groupTask.stream().map(task -> convertToTaskSummary(task, false)).toList();
@@ -49,11 +49,11 @@ public class HomeService {
     }
 
     private HomeDashboardDTO getDashboardForUserOnly(Long userId, String userFirstName) {
-        long pendingCount = taskRepository.countByAssigneeUserIdAndTaskType(userId, TaskType.IN_PROGRESS);
+        long pendingCount = taskRepository.countByAssigneeUserIdAndTaskType(userId, TaskType.CREATED);
         long delayedCount = taskRepository.countByAssigneeUserIdAndTaskType(userId, TaskType.DELAYED);
         long completedCount = taskRepository.countByAssigneeUserIdAndTaskType(userId, TaskType.COMPLETED);
 
-        List<Task> personalTask = taskRepository.findByAssigneeUserIdAndTaskType(userId, TaskType.IN_PROGRESS);
+        List<Task> personalTask = taskRepository.findByAssigneeUserIdAndTaskType(userId, TaskType.CREATED);
         List<HomeDashboardDTO.TaskSummary> personalList = personalTask.stream().map(task -> convertToTaskSummary(task, true)).toList();
 
         HomeDashboardDTO.DashboardStats dashboardStats = new HomeDashboardDTO.DashboardStats(completedCount, pendingCount, delayedCount);
