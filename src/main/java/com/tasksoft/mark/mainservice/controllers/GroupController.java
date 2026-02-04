@@ -2,6 +2,7 @@ package com.tasksoft.mark.mainservice.controllers;
 
 import com.tasksoft.mark.mainservice.dto.*;
 import com.tasksoft.mark.mainservice.entity.Group;
+import com.tasksoft.mark.mainservice.mappers.GroupMapper;
 import com.tasksoft.mark.mainservice.security.SecurityUtils;
 import com.tasksoft.mark.mainservice.service.GroupService;
 import org.springframework.http.HttpStatus;
@@ -13,18 +14,21 @@ import java.util.List;
 @RestController
 @RequestMapping("/groups")
 public class GroupController {
+
+    private final GroupMapper groupMapper;
     private final GroupService groupService;
     private final SecurityUtils securityUtils;
 
-    public GroupController(GroupService groupService, SecurityUtils securityUtils) {
+    public GroupController(GroupService groupService, SecurityUtils securityUtils, GroupMapper groupMapper) {
         this.groupService = groupService;
         this.securityUtils = securityUtils;
+        this.groupMapper = groupMapper;
     }
 
     @GetMapping("/user-groups")
     public ResponseEntity<List<GroupContentDTO>> getAllUserGroups() {
         Long userId = securityUtils.getCurrentUserId();
-        List<GroupContentDTO> list = groupService.getUserGroups(userId).stream().map(this::mapGroupToDTO).toList();
+        List<GroupContentDTO> list = groupService.getUserGroups(userId).stream().map(GroupMapper::mapGroupToDTO).toList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
@@ -57,13 +61,5 @@ public class GroupController {
         groupService.removeUserFromGroup(userToGroupDTO.groupId(), userToGroupDTO.userId());
         return new ResponseEntity<>(userToGroupDTO.groupId(), HttpStatus.OK);
     }
-
-    private GroupContentDTO mapGroupToDTO(Group group) {
-        List<GroupMemberDto> members = group.getMembers().stream()
-                .map(user -> new GroupMemberDto(user.getId(), user.getUsername(), user.getFirstName() + " " + user.getLastName())).toList();
-        return new GroupContentDTO(group.getName(), members);
-    }
-
-
 
 }

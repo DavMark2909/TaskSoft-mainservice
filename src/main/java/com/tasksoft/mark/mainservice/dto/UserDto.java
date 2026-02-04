@@ -10,12 +10,14 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserDto {
+    private Long id;
     private String username;
     private String firstName;
     private String lastName;
 
     public static UserDto convert(User user) {
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());

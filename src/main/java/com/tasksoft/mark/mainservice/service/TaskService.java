@@ -51,14 +51,14 @@ public class TaskService {
                 break;
         }
         Task savedTask = taskRepository.save(task);
-        switch (dto.type()){
-            case GROUP:
-                eventPublisher.publishEvent(new GroupTaskCreationEvent(savedTask));
-                break;
-            case SINGLE:
-                eventPublisher.publishEvent(new SingleTaskCreationEvent(savedTask));
-                break;
-        }
+//        switch (dto.type()){
+//            case GROUP:
+//                eventPublisher.publishEvent(new GroupTaskCreationEvent(savedTask));
+//                break;
+//            case SINGLE:
+//                eventPublisher.publishEvent(new SingleTaskCreationEvent(savedTask));
+//                break;
+//        }
         return savedTask;
     }
 
@@ -69,6 +69,12 @@ public class TaskService {
         task.setDescription(description);
         task.setTaskType(type);
         return task;
+    }
+
+    public Long deleteTask(Long id) {
+        Task task = getTaskById(id);
+        taskRepository.delete(task);
+        return id;
     }
 
 }

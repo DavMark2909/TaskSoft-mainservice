@@ -1,15 +1,13 @@
 package com.tasksoft.mark.mainservice.service;
 
-import com.tasksoft.mark.mainservice.dto.GroupCreateDto;
-import com.tasksoft.mark.mainservice.dto.GroupDashboardDTO;
-import com.tasksoft.mark.mainservice.dto.GroupDto;
-import com.tasksoft.mark.mainservice.dto.HomeDashboardDTO;
+import com.tasksoft.mark.mainservice.dto.*;
 import com.tasksoft.mark.mainservice.entity.Group;
 import com.tasksoft.mark.mainservice.entity.Task;
 import com.tasksoft.mark.mainservice.entity.User;
 import com.tasksoft.mark.mainservice.entity.enums.TaskType;
 import com.tasksoft.mark.mainservice.exception.GroupNotFoundException;
 import com.tasksoft.mark.mainservice.exception.OperationFailedException;
+import com.tasksoft.mark.mainservice.mappers.GroupMapper;
 import com.tasksoft.mark.mainservice.repository.GroupRepository;
 import com.tasksoft.mark.mainservice.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -42,6 +40,8 @@ public class GroupService {
         }
         return groupRepository.save(group);
     }
+
+//    todo: change addUserToGroup to accept a list of users
 
     @Transactional
     public void addUserToGroup(Long groupId, Long userId){
@@ -83,10 +83,12 @@ public class GroupService {
 
         List<Task> groupTask = taskRepository.findByAssigneeGroupIdAndTaskType(id, TaskType.CREATED);
 
+        GroupContentDTO usersDto = GroupMapper.mapGroupToDTO(group);
+
         List<HomeDashboardDTO.TaskSummary> groupList = groupTask.stream().map(this::convertToTaskSummary).toList();
         HomeDashboardDTO.DashboardStats dashboardStats = new HomeDashboardDTO.DashboardStats(completedCount, pendingCount, delayedCount);
 
-        return new GroupDashboardDTO(group.getName(), dashboardStats, groupList);
+        return new GroupDashboardDTO(group.getName(), usersDto, dashboardStats, groupList);
     }
 
     private HomeDashboardDTO.TaskSummary convertToTaskSummary(Task task) {

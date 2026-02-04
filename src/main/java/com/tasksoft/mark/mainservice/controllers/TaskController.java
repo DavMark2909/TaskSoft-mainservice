@@ -23,9 +23,13 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(task.getId());
     }
 
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Long> deleteTask(@PathVariable Long id) {
+        Long removedID = taskService.deleteTask(id);
+        return ResponseEntity.status(HttpStatus.OK).body(removedID);
+    }
 
-
-    @GetMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<Long> updateTask(@RequestBody TaskUpdateDto taskUpdateDto) {
         Task task = taskService.updateStatus(taskUpdateDto.id(), taskUpdateDto.name(), taskUpdateDto.description(), taskUpdateDto.type());
         return ResponseEntity.status(HttpStatus.OK).body(task.getId());
