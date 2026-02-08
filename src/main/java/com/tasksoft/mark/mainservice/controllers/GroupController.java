@@ -62,4 +62,11 @@ public class GroupController {
         return new ResponseEntity<>(userToGroupDTO.groupId(), HttpStatus.OK);
     }
 
+//    todo: requestbody accepts ids of users to be removed as added to the group
+    @PostMapping("/modify/{id}")
+    public ResponseEntity<Long> modifyGroup(@PathVariable Long id, @RequestBody ModifyGroupDto modifyGroupDto){
+        groupService.modfigyGroup(id, modifyGroupDto);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
 }

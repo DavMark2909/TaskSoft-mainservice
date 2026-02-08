@@ -41,4 +41,16 @@ public class Group {
         this.members.remove(user);
         user.getGroups().remove(this);
     }
+
+    public void addMembers(List<User> users) {
+        for (User user : users) {
+            addMember(user);
+        }
+    }
+
+    public void removeMembers(List<User> usersToRemove) {
+        for (User user : usersToRemove) {
+            removeMember(user);
+        }
+    }
 }

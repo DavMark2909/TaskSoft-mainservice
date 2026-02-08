@@ -41,7 +41,18 @@ public class GroupService {
         return groupRepository.save(group);
     }
 
-//    todo: change addUserToGroup to accept a list of users
+    public void modfigyGroup(Long groupId, ModifyGroupDto dto) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new GroupNotFoundException(groupId));
+        group.setName(dto.updatedName());
+
+        List<User> addUsers = userService.getUsersById(dto.userIdsToAdd());
+        List<User> removeUsers = userService.getUsersById(dto.userIdsToRemove());
+
+        group.addMembers(addUsers);
+        group.removeMembers(removeUsers);
+
+        groupRepository.save(group);
+    }
 
     @Transactional
     public void addUserToGroup(Long groupId, Long userId){
