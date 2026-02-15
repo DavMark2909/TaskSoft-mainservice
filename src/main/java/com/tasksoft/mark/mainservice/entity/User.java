@@ -30,9 +30,6 @@ public class User {
     @OneToMany(mappedBy = "assigneeUser")
     private Set<Task> tasksAssigned = new HashSet<>();
 
-    @OneToMany(mappedBy = "recipient")
-    private Set<Notification> directNotifications = new HashSet<>();
-
     @ManyToMany(mappedBy = "members")
     private List<Group> groups = new ArrayList<>();
 }
