@@ -32,6 +32,10 @@ public class Group {
     )
     private List<User> members = new ArrayList<>();
 
+//    Notifications to a group of people
+    @OneToMany(mappedBy = "targetGroup", cascade = CascadeType.ALL)
+    private Set<Notification> groupNotifications = new HashSet<>();
+
     public void addMember(User user) {
         this.members.add(user);
         user.getGroups().add(this);
