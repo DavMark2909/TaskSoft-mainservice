@@ -1,6 +1,8 @@
 package com.tasksoft.mark.mainservice.service;
 
+import com.tasksoft.mark.mainservice.dto.TaskNotificationDto;
 import com.tasksoft.mark.mainservice.entity.Group;
+import com.tasksoft.mark.mainservice.entity.enums.NotificationType;
 import com.tasksoft.mark.mainservice.entity.enums.TaskType;
 import com.tasksoft.mark.mainservice.events.GroupTaskCreationEvent;
 import com.tasksoft.mark.mainservice.events.SingleTaskCreationEvent;
@@ -9,6 +11,7 @@ import com.tasksoft.mark.mainservice.dto.TaskCreateDto;
 import com.tasksoft.mark.mainservice.entity.Task;
 import com.tasksoft.mark.mainservice.entity.User;
 import com.tasksoft.mark.mainservice.repository.TaskRepository;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +21,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final GroupService groupService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final StreamBridge streamBridge;
 
-    public TaskService(TaskRepository taskRepository, UserService userService, GroupService groupService, ApplicationEventPublisher eventPublisher) {
+    public TaskService(TaskRepository taskRepository, UserService userService, GroupService groupService, StreamBridge streamBridge) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.groupService = groupService;
-        this.eventPublisher = eventPublisher;
+        this.streamBridge = streamBridge;
     }
 
     public Task getTaskById(Long id) {
@@ -51,14 +54,12 @@ public class TaskService {
                 break;
         }
         Task savedTask = taskRepository.save(task);
-//        switch (dto.type()){
-//            case GROUP:
-//                eventPublisher.publishEvent(new GroupTaskCreationEvent(savedTask));
-//                break;
-//            case SINGLE:
-//                eventPublisher.publishEvent(new SingleTaskCreationEvent(savedTask));
-//                break;
-//        }
+
+        boolean isPersonal = dto.type() == NotificationType.SINGLE;
+        TaskNotificationDto payload = new TaskNotificationDto(
+                savedTask.getId(), dto.assigneeId(), isPersonal, dto.name());
+
+        streamBridge.send("taskEvents-out-0", payload);
         return savedTask;
     }
 
