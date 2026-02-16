@@ -41,6 +41,9 @@ CREATE TABLE task (
                       description TEXT,
                       task_type task_type_enum NOT NULL,
 
+                      created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                      due_date TIMESTAMP WITHOUT TIME ZONE,
+
 -- Foreign Keys
                       assigner_id BIGINT NOT NULL,
                       assignee_user_id BIGINT,

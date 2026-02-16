@@ -42,5 +42,19 @@ services:
       - tasksoft-postgres-data:/var/lib/postgresql/data
     restart: always
 
+  notification-postgres:
+    image: "postgres:14.12"
+    container_name: "notification-postgres"
+    ports:
+      - 5444:5432
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=psw
+      - POSTGRES_DB=tasksoft_db
+    volumes:
+      - notification-postgres-data:/var/lib/postgresql/data
+    restart: always
+
 volumes:
   tasksoft-postgres-data:
+  notification-postgres-data:
