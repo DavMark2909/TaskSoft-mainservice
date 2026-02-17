@@ -45,7 +45,7 @@ public class HomeService {
 
         HomeDashboardDTO.DashboardStats dashboardStats = new HomeDashboardDTO.DashboardStats(completedCount, pendingCount, delayedCount);
 
-        return new HomeDashboardDTO(userById.getFirstName(), dashboardStats, Stream.concat(personalList.stream(), groupList.stream()).collect(Collectors.toList()));
+        return new HomeDashboardDTO(userById.getFirstName(), userId, dashboardStats, Stream.concat(personalList.stream(), groupList.stream()).collect(Collectors.toList()));
     }
 
     private HomeDashboardDTO getDashboardForUserOnly(Long userId, String userFirstName) {
@@ -58,7 +58,7 @@ public class HomeService {
 
         HomeDashboardDTO.DashboardStats dashboardStats = new HomeDashboardDTO.DashboardStats(completedCount, pendingCount, delayedCount);
 
-        return new HomeDashboardDTO(userFirstName, dashboardStats, personalList);
+        return new HomeDashboardDTO(userFirstName, userId, dashboardStats, personalList);
     }
 
     private HomeDashboardDTO.TaskSummary convertToTaskSummary(Task task, boolean personal) {
