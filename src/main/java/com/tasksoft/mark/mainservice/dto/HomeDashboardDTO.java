@@ -5,6 +5,7 @@ import java.util.List;
 
 public record HomeDashboardDTO(
         String userName,
+        Long userId,
         DashboardStats stats,
         List<TaskSummary> ongoingTasks
 ) {
